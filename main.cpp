@@ -65,7 +65,6 @@ int main() {
     }
 
     while(1) {
-        char ch;
         printf("Servidor esperando ...\n");
 
         client_sockfd = accept(server_sockfd, (struct sockaddr *) &client_address, &client_len);
@@ -88,10 +87,6 @@ int main() {
                 int canal;
                 msg >> canal;
                 if (canal == 0) {
-                    sprintf(buf, "%lf\n", (l1/6.25));
-                    write(client_sockfd, buf, strlen(buf));
-                } else if (canal == 1){
-                    sprintf(buf, "%lf\n", (l2/6.25));
                     sprintf(buf, "%lf\n", (l1/6.25) + ruido());
                     write(client_sockfd, buf, strlen(buf));
                 } else if (canal == 1){
