@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#include <time.h>
 #include <string.h>
 #include <sstream>
 #include <math.h>
@@ -21,9 +22,14 @@ bool run = false;
 void *tanque_t(void *param);
 void setup();
 
+void *tanque_t(void *param);
+void setup();
+double ruido();
+
 using namespace std;
 
 int main() {
+    srand(time(NULL));
     setup();
     pthread_t thread_tanque;
     pthread_attr_t attr_thread_tanque;
@@ -86,6 +92,10 @@ int main() {
                     write(client_sockfd, buf, strlen(buf));
                 } else if (canal == 1){
                     sprintf(buf, "%lf\n", (l2/6.25));
+                    sprintf(buf, "%lf\n", (l1/6.25) + ruido());
+                    write(client_sockfd, buf, strlen(buf));
+                } else if (canal == 1){
+                    sprintf(buf, "%lf\n", (l2/6.25) + ruido());
                     write(client_sockfd, buf, strlen(buf));
                 }
             } else if (tipo.find("WRITE") == 0) {
@@ -107,7 +117,7 @@ void *tanque_t(void *param) {
         l2 = g[1][0]*l1_ant + g[1][1]*l2_ant + h[1]*volts*3;
         l1_ant = l1;
         l2_ant = l2;
-        printf("%lf\t%lf\t%lf\n", l1, l2, volts);
+        // printf("%lf\t%lf\t%lf\n", l1, l2, volts);
         usleep(PERIODO*1000000);
     }
     l1 = 0; l2 = 0; l1_ant = 0; l2_ant = 0; volts = 0;
@@ -126,4 +136,9 @@ void setup() {
 
     h[0] = (beta/alfa)*(1 - exp(-1*alfa*PERIODO));
     h[1] = (beta/alfa)*(1 - exp(-1*alfa*PERIODO)*((alfa*PERIODO)+1));
+}
+double ruido() {
+    double r = rand()/(25.0 * RAND_MAX) - 0.04;
+    // printf("RUIDO: %lf\n", r);
+    return r;
 }
