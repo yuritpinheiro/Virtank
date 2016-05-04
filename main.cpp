@@ -121,7 +121,7 @@ void *tanque_t(void *param) {
 
 void setup() {
     double area_base = (M_PI * pow(4.45, 2))/4.0f;
-    double area_out = (M_PI * pow(0.52, 2))/4.0f;
+    double area_out = (M_PI * pow(0.48, 2))/4.0f;
     double alfa = (area_out/area_base)*sqrt(G/(2*L0));
     double beta = 3.3/area_base;
     g[0][0] = exp(-1*alfa*PERIODO);
